@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <body>
+        <ui:composition template="./../WEB-INF/templates/plantilla.xhtml">
+            <ui:define name="content">
+        <p:ajaxStatus style="display:block;margin-bottom:2em;height:24px;"/>
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />  
+        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+            <p:graphicImage name="/images/ajax-loading.gif" />
+        </p:dialog>
+        <h:form id="form">
+            <p:messages id="mensaje"  severity="info,fatal,warn" showSummary="true" showDetail="true" >
+                <p:autoUpdate/>
+            </p:messages>
+            <p:fieldset legend="Cambio de Contraseña">
+                <h:panelGrid columns="3" id="pgDatos">
+                    
+                <p:outputLabel for="txtCurrPass" value="Clave Actual"/>
+                <p:password id="txtCurrPass" value="#{changePassController.oldPass}" required="true" />
+                <p:message for="txtCurrPass"/>
+                
+                <p:outputLabel for="txtNewPass" value="Clave Nueva"/>
+                <p:password id="txtNewPass" value="#{changePassController.newPass}" match="txtCurrPass2" feedback="true"
+                            validatorMessage="Las claves no coinciden" />
+                <p:message for="txtNewPass"/>
+                
+                <p:outputLabel for="txtCurrPass2" value="Repetir Clave"/>
+                <p:password id="txtCurrPass2" />
+                <p:message for="txtCurrPass2"/>
+                
+                </h:panelGrid>
+                <p:commandButton value="Cambiar" update="form,pgDatos,mensaje" action="#{changePassController.changePass()}" >
+                </p:commandButton>
+            </p:fieldset>          
+        </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

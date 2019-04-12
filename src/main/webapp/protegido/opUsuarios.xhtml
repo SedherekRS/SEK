@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <ui:composition template="./../WEB-INF/templates/plantilla.xhtml">
+            <ui:define name="content">
+                <p:ajaxStatus style="display:block;margin-bottom:2em;height:24px;"/>
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />  
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage name="/images/ajax-loading.gif" />
+                </p:dialog>
+                <h:form id="form">
+                    <p:growl id="msgs" showDetail="true" />
+                    <p:dataTable id="usuario" value="#{usuarioController.usuarios}" selectionMode="single" var="usuario" 
+                                 selection="#{usuarioController.selectedUsuario}" rowKey="#{usuario.id}" editable="true" >
+                        <p:ajax event="rowEdit" listener="#{usuarioController.onRowEdit}" update=":form:msgs"  />
+                        <p:ajax event="rowEditCancel" listener="#{usuarioController.onRowCancel}" update=":form:msgs" />
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{usuario.nombre}" />
+                    </p:column>
+                    <p:column headerText="Apellidos">
+                        <h:outputText value="#{usuario.apellidoPaterno} #{usuario.apellidoMaterno}" />
+                    </p:column>
+                    <p:column headerText="Correo">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText style="display: block" value="#{usuario.correo}" /></f:facet>
+                            <f:facet name="input"><p:inputText  value="#{usuario.correo}" /></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Telefono">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText style="display: block" value="#{usuario.telefono}" /></f:facet>
+                            <f:facet name="input"><p:inputText  value="#{usuario.telefono}" /></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Activo">
+                        <p:selectBooleanCheckbox value="#{usuario.activo}" disabled="true"   />
+                    </p:column>
+                    <p:column headerText="Empresa">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{usuario.empresa.nombre}" /></f:facet>
+                            <f:facet name="input">
+                                <h:selectOneMenu value="#{usuario.empresa.id}" style="width:100%" >
+                                    <f:selectItems value="#{empresaController.empresas}" var="empresa" itemLabel="#{empresa.nombre}" itemValue="#{empresa.id}" />
+                                </h:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Tipo Usuario">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{usuario.tipoUsuario.nombre}" /></f:facet>
+                            <f:facet name="input">
+                                <h:selectOneMenu value="#{usuario.tipoUsuario.id}" style="width:100%" >
+                                    <f:selectItems value="#{tipoUsuarioController.tipos}" var="tipoUsuario" itemLabel="#{tipoUsuario.nombre}" itemValue="#{tipoUsuario.id}" />
+                                </h:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column style="width:35px">
+                        <p:rowEditor />
+                    </p:column>
+                    <f:facet name="footer" >
+                        <p:commandButton  action="#{usuarioController.deleteUsuario()}" process="usuario" title="Eliminar" 
+                                          update="usuario" value="Eliminar"  ajax="false"/>  
+                        <p:commandButton value="Nuevo"  onclick="PF('dlg2').show();" 
+                                           />
+                        <p:commandButton value="Habilitar/Deshabilitar"   update="usuario,:form:msgs" action="#{usuarioController.disableUser()}"/>
+                    </f:facet>                  
+                </p:dataTable>
+                </h:form>
+                <p:messages id="mensaje" severity="info,fatal" showSummary="true" showDetail="true"/>
+                 <p:dialog header="Nuevo Usuario" widgetVar="dlg2" modal="true" height="600" width="500">
+                    <h:form id="form_add">
+                        <p:messages id="mensaje_add" severity="info,fatal" showSummary="true" showDetail="true"/>
+                        <p:panel id="panel" header="Datos Básicos" style="margin-bottom:10px;">
+                        <h:panelGrid columns="3" id="pgDatos_add">
+                            <p:outputLabel for="txtCorreo" value="Usuario(correo)"/>
+                            <p:inputText id="txtCorreo" value="#{usuarioController.usuario.correo}" required="true" validator="emailValidator"/>
+                            <p:message for="txtCorreo"/>
+                    
+                            <p:outputLabel for="txtNombre" value="Nombre"/>
+                            <p:inputText id="txtNombre" value="#{usuarioController.usuario.nombre}" required="true"/>
+                            <p:message for="txtNombre"/>
+                            
+                            <p:outputLabel for="txtApellidoPat" value="Apellido Paterno"/>
+                            <p:inputText id="txtApellidoPat" value="#{usuarioController.usuario.apellidoPaterno}" required="true"/>
+                            <p:message for="txtApellidoPat"/>
+                            
+                            <p:outputLabel for="txtApellidoMat" value="Apellido Materno"/>
+                            <p:inputText id="txtApellidoMat" value="#{usuarioController.usuario.apellidoMaterno}"/>
+                            <p:message for="txtApellidoMat"/>
+                            
+                            <p:outputLabel for="tipoUsuario" value="Tipo Usuario" />
+                            <h:selectOneMenu id="tipoUsuario" value="#{usuarioController.selectedTipoUsuario}"  required="true" >
+                                <f:selectItem itemLabel="Seleccione" itemValue="#{null}"/>
+                                <f:selectItems value="#{tipoUsuarioController.tipos}" var="tipoUsuario" itemLabel="#{tipoUsuario.nombre}" itemValue="#{tipoUsuario.id}" />
+                            </h:selectOneMenu>
+                            <p:message for="tipoUsuario"/>
+                            
+                            <p:outputLabel for="empresa" value="Empresa" />
+                            <h:selectOneMenu id="empresa" value="#{usuarioController.selectedEmpresa}"   required="true" >
+                                <f:selectItem itemLabel="Seleccione" itemValue="#{null}"/>
+                                <f:selectItems value="#{empresaController.empresas}" var="empresa" itemLabel="#{empresa.nombre}" itemValue="#{empresa.id}" />
+                            </h:selectOneMenu>
+                            <p:message for="empresa"/>
+                        </h:panelGrid>
+                        </p:panel>
+                        <p:commandButton value="Crear" update="mensaje_add,pgDatos_add,:form:usuario,form_add" action="#{usuarioController.onAddNew()}"
+                                           oncomplete="PF('dlg2').hide()">
+                            <p:resetInput target="form_add" />
+                        </p:commandButton>
+                        <p:commandButton value="Limpiar" type="reset"  />
+                            
+                            
+                    
+                    </h:form>
+                </p:dialog>   
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"       
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+        <ui:composition template="./../WEB-INF/templates/plantilla.xhtml">
+            <ui:define name="content">
+                <p:ajaxStatus style="display:block;margin-bottom:2em;height:24px;"/>
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />  
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <p:graphicImage name="/images/ajax-loading.gif" />
+                </p:dialog>
+
+                <h:form id="form" enctype="multipart/form-data">
+                    <p:messages id="mensaje"  severity="info,fatal,warn,error" showSummary="true" showDetail="true" >
+                        <p:autoUpdate/>
+                    </p:messages>
+                    <p:dataTable var="factura" value="#{uploadFacturasController.facturas}">
+                        <p:column headerText="Factura" sortBy="#{factura.numeroFactura}">
+                            <h:outputText value="#{factura.numeroFactura}" />
+                        </p:column>
+                        <p:column headerText="Monto" sortBy="#{factura.monto}">
+                            <h:outputText value="#{factura.monto}">
+                                <f:convertNumber type="currency" currencySymbol="$" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Moneda" sortBy="#{factura.moneda}">
+                            <h:outputText value="#{factura.moneda}" />
+                        </p:column>
+
+                        <p:column headerText="Fecha" sortBy="#{factura.fechaFactura}">
+                            <h:outputText value="#{factura.fechaFactura}">
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="PDF">
+                            <h:outputLink value="https://drive.google.com/open?id=#{factura.rutaFacturaPdf}" target="_blank">
+                                <h:outputText value="Ver Factura"/>
+                            </h:outputLink>
+                        </p:column>
+                        <f:facet name="footer">
+                        <!--<p:commandButton  action="#{uploadFacturasController.deleteFactura()}" process="empresa" title="Eliminar" 
+                                          update="factura" value="Eliminar"  ajax="false"/>  -->
+
+                        </f:facet>
+                    </p:dataTable>
+                    <br></br>
+                    <br></br>
+                    <p:fieldset legend="Carga de Facturas">
+                        <h:panelGrid columns="3" id="pgDatos">
+
+                            <p:outputLabel  value="Archivo PDF"/>
+                            <p:fileUpload id="UFPdf" value="#{uploadFacturasController.filePdf}" mode="simple" skinSimple="true"  label="Seleccione Archivo"
+                                          update="mensaje" sizeLimit="150000" fileLimit="1" />
+                            <p:message for="UFPdf"/>
+
+                            <p:outputLabel  value="Archivo XML"/>
+                            <p:fileUpload id="UFXml" value="#{uploadFacturasController.fileXml}" mode="simple"  skinSimple="true" label="Seleccione Archivo"
+                                          update="mensaje" sizeLimit="100000" fileLimit="1" />
+                            <p:message for="UFXml"/>
+                        </h:panelGrid>
+                        <p:commandButton value="Cargar" update="form,pgDatos,mensaje" action="#{uploadFacturasController.cargar()}" ajax="false">
+                        </p:commandButton>
+                    </p:fieldset>    
+
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

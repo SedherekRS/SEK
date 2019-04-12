@@ -1,0 +1,32 @@
+#principal{
+    width: 1024px;
+    margin: 0 auto;
+    background-image: url("http://localhost:8080/SEK/resources/images/BCK.png");
+    
+}
+
+#cuadro{
+   margin: 100px auto;
+   width: 40% !important;
+   text-align: center;
+    
+}
+
+.header h1 {
+    font-size: 35px;
+    color: #fff;
+    font-family: 'Cormorant SC', serif;
+    letter-spacing: 3px;
+    margin: 0 auto;
+    margin-top: 50px;
+    text-shadow: 1px 1px 4px #000;
+    text-transform: uppercase;
+    font-weight: 350;
+}
+.footer p {
+font-size: 16px;
+color: #fff;
+margin: 0px;
+letter-spacing:1.4px;
+font-weight:blod;
+}

@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <ui:composition template="./../WEB-INF/templates/plantilla.xhtml">
+            <ui:define name="content">
+
+                <h:form id="form">
+                    <p:growl id="msgs" showDetail="true" />
+                    
+                    <p:dataTable id="tipoUsuario" value="#{tipoUsuarioController.tipos}" selectionMode="single" var="tipoUsuario" 
+                                 selection="#{tipoUsuarioController.selectedTipo}" rowKey="#{tipoUsuario.id}" editable="true"  >
+                    <p:ajax event="rowEdit" listener="#{tipoUsuarioController.onRowEdit}" update=":form:msgs"  />
+                    <p:ajax event="rowEditCancel" listener="#{tipoUsuarioController.onRowCancel}" update=":form:msgs" />
+                    
+                    <p:column headerText="Nombre">
+                        <p:cellEditor>
+                            <f:facet  name="output"><h:outputText style="display: block" value="#{tipoUsuario.nombre}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="modelInput" value="#{tipoUsuario.nombre}" style="width:20%"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    
+                    <p:column style="width:35px">
+                        <p:rowEditor />
+                    </p:column>
+                    <!--
+                    <p:column style="width:35px">
+                        <p:commandButton  id="boton" action="#{tipoUsuarioController.deleteTipo()}" process="tipoUsuario" title="Eliminar" 
+                                          update="tipoUsuario" icon="ui-icon ui-icon-close"   ajax="false"/>  
+                    </p:column>
+                    -->
+                    <f:facet name="footer">
+                        <p:commandButton  action="#{tipoUsuarioController.deleteTipo()}" process="tipoUsuario" title="Eliminar" 
+                                          update="tipoUsuario" value="Eliminar"  ajax="false"/>  
+                        <p:commandButton value="Nuevo"   update=":form:msgs" action="#{tipoUsuarioController.onAddNew()}"
+                                         oncomplete="PF('tipoUsuario').addRow();" ajax="false"/>
+                    </f:facet>
+                </p:dataTable>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

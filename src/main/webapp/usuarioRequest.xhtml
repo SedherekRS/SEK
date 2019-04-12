@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      
+    <h:head>
+        <title>Petición</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <body>
+        <p:ajaxStatus style="display:block;margin-bottom:2em;height:24px;"/>
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />  
+        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+            <p:graphicImage name="/images/ajax-loading.gif" />
+        </p:dialog>
+        <h:form>
+            <p:messages id="mensaje" severity="info,fatal" showSummary="true" showDetail="true"/>
+            <p:fieldset legend="Formulario de Acceso al Sistema">
+                <h:panelGrid columns="3" id="pgDatos">
+                    <p:outputLabel for="txtNombre" value="Nombre Completo"/>
+                    <p:inputText id="txtNombre" value="#{solicitudUsuarioController.solicitudUsuario.nombre}" required="true"/>
+                    <p:message for="txtNombre"/>
+                    
+                    <p:outputLabel for="txtPuesto" value="Puesto"/>
+                    <p:inputText id="txtPuesto" value="#{solicitudUsuarioController.solicitudUsuario.puesto}" required="true"/>
+                    <p:message for="txtPuesto"/>
+                    
+                    <p:outputLabel for="txtCorreo" value="Correo"/>
+                    <p:inputText id="txtCorreo" value="#{solicitudUsuarioController.solicitudUsuario.correo}" required="true" validator="emailValidator"/>
+                    <p:message for="txtCorreo"/>
+                    
+                    <p:outputLabel for="txtInfo" value="Información Adicional"/>
+                    <p:inputTextarea id="txtInfo" value="#{solicitudUsuarioController.solicitudUsuario.info}" required="true"/>
+                    <p:message for="txtInfo"/>
+                    
+                </h:panelGrid>
+                <p:commandButton value="Enviar" update="pgDatos,mensaje" actionListener="#{solicitudUsuarioController.registrar()}"></p:commandButton>
+            </p:fieldset>          
+        </h:form>
+    </body>
+</html>

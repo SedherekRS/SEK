@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Inicio de Sesisión</title>
+        <h:outputStylesheet library="css" name="index.css"/>
+    </h:head>
+    <h:body id="principal">
+        <div class="header" >
+            <h1>Sistema de Almacenamiento de Facturas SEK</h1>
+        </div>
+        <div id="cuadro">
+            
+        <h:form>
+            <p:messages autoUpdate="true" showDetail="true"  closable="true"/>
+            <h:panelGrid columns="4">
+                <p:outputLabel for="txtUsuario" value="Usuario*"/>
+                <p:inputText id="txtUsuario" value="#{indexController.usuario.correo}"  validator="emailValidator" />
+                <p:message for="txtUsuario" display="txtUsuario"  />
+                <p:watermark for="txtUsuario" value="correo@dominio.com" />
+
+                <p:outputLabel for="txtPass" value="Password*"/>
+                <p:password id="txtPass" value="#{indexController.usuario.pass}"  validator="passValidator" />
+                <p:message for="txtPass" display="txtPass" />
+                 <p:watermark for="txtPass" value="******" />
+                
+            </h:panelGrid>
+            <p:commandButton value="Ingresar" action="#{indexController.iniciarSesion()}"/>
+            <p:separator/>
+            <p:link value="Petición de Usuario" outcome="usuarioRequest"/>
+            <br></br>
+            <p:link value="Recuperación de Contraseña" outcome="passRetrieve"/>
+        </h:form>
+        </div>
+        <div class="footer">
+		<p>Diseñado e implementado por Luis Edher Rodríguez Santiago</p>
+	</div>
+    </h:body>
+    
+</html>
+
